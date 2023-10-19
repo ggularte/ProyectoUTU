@@ -1,0 +1,14 @@
+#!/bin/bash
+var=$(date +%y-%m-%d-%H)-BUCompleto
+var2=$(date)
+dir=~/Logs
+
+if [ -d $dir ]
+	then
+		echo ""
+	else
+		mkdir ~/Logs 
+fi
+
+(rsync -a --rsync-path="mkdir -p /home/gsaITI/Respaldos/$var && rsync" -e "ssh -p 3899 -i ~/.ssh/id_rsa" -avzh ~/Scripts/ /etc/passwd /etc/shadow /etc/sysconfig/network-scripts/ /etc/group /etc/ssh/sshd_config /etc/sudoers gsaITI@192.168.10.3:/home/gsaITI/Respaldos/$var && echo "$var2 : Respaldo completo realizado correctamente" >> ~/Logs/BackupLogs) || echo "$var2 : Error al realizar el respaldo completo" >> ~/Logs/BackupLogs
+reset

@@ -1,0 +1,15 @@
+#!/bin/bash
+var=$(date)
+dir=~/Logs
+
+if [ -d $dir ]
+	then
+		echo ""
+	else
+		mkdir ~/Logs
+fi
+
+(mysqldump -u root -proot ProyectoGSA --single-transaction --events > RespaldoBD.sql && echo "$var : Copia de la base de datos realizada correctamente" >> ~/Logs/BackupLogs) || echo "$var : Error al realizar copia de la base de datos" >> ~/Logs/BackupLogs 
+(rsync -a --rsync-path="mkdir -p /home/gsaITI/Respaldos/ && rsync" -e "ssh -p 3899 -i ~/.ssh/id_rsa" -avzh ~/RespaldoBD.sql gsaITI@192.168.10.3:/home/gsaITI/Respaldos/ && echo "$var : Respaldo de la base de datos realizado correctamente" >> ~/Logs/BackupLogs) || echo "$var : Error al realizar el respaldo de la base de datos" >> ~/Logs/BackupLogs
+rm ~/RespaldoBD.sql
+reset
